@@ -13,7 +13,7 @@
 using namespace std;
 struct point
 {
-  //?®y¼Ð?®y¼Ð
+  //?ï¿½yï¿½ï¿½?ï¿½yï¿½ï¿½
   int x;
   int y;
 };
@@ -36,15 +36,15 @@ char solAry[15][15] = {
 
 bool pass = true;
 
-//ªì©l¤Æ°g?
+//ï¿½ï¿½lï¿½Æ°g?
 int **Maze;
-//«O¦s¥ô·NÂI¦b¸ô®|¤¤ªº«e¤@¨B
+//ï¿½Oï¿½sï¿½ï¿½Nï¿½Iï¿½bï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½@ï¿½B
 point **Pre;
-//²¾?¤è¦V¡A??±×³£¥i¥H¡A¤K­Ó¤è¦V
+//ï¿½ï¿½?ï¿½ï¿½Vï¿½A??ï¿½×³ï¿½ï¿½iï¿½Hï¿½Aï¿½Kï¿½Ó¤ï¿½V
 point move[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 void Create(int row, int column, int startX, int startY, int endX, int endY)
 {
-  //?«Ø°g?¡Aª`·N¨ì¥Î0ªí¥Ü¥i¨«¡A1ªí¥Ü?¡A?¾ã­Ó?¤Jªº°g?¦A¥Î???¡A?²zªº?­Ô´N¤£¥Î¯S?ª`·N?¬É??
+  //?ï¿½Ø°g?ï¿½Aï¿½`ï¿½Nï¿½ï¿½ï¿½0ï¿½ï¿½Ü¥iï¿½ï¿½ï¿½A1ï¿½ï¿½ï¿½?ï¿½A?ï¿½ï¿½ï¿½?ï¿½Jï¿½ï¿½ï¿½g?ï¿½Aï¿½ï¿½???ï¿½A?ï¿½zï¿½ï¿½?ï¿½Ô´Nï¿½ï¿½ï¿½Î¯S?ï¿½`ï¿½N?ï¿½ï¿½??
   int i, j;
 
   for (i = 0; i < row + 2; i++)
@@ -98,18 +98,18 @@ void Create(int row, int column, int startX, int startY, int endX, int endY)
   }
   cout << endl;
 }
-// MazePath(²×ÂIx, ²×ÂIy, °_ÂIx, °_ÂIy)
+// MazePath(ï¿½ï¿½ï¿½Ix, ï¿½ï¿½ï¿½Iy, ï¿½_ï¿½Ix, ï¿½_ï¿½Iy)
 bool MazePath(int startX, int startY, int endX, int endY)
 {
-  //§P?¬O§_¦³¸ô??¤J¤f¨ì¥X¤f¡A«O¦s?¸ô?¡]?¦C¡^
+  //ï¿½P?ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½??ï¿½Jï¿½fï¿½ï¿½Xï¿½fï¿½Aï¿½Oï¿½s?ï¿½ï¿½?ï¿½]?ï¿½Cï¿½^
   if (endX == startX && endY == startY)
   {
     return true;
   }
 
-  //¥Î¤_?«×É¬¥ý·j¯Á
+  //ï¿½Î¤_?ï¿½ï¿½É¬ï¿½ï¿½ï¿½jï¿½ï¿½
   queue<point> q;
-  //?«e¦ì¸m
+  //?ï¿½eï¿½ï¿½m
   point now;
   now.x = endX;
   now.y = endY;
@@ -131,7 +131,7 @@ bool MazePath(int startX, int startY, int endX, int endY)
       }
       if (Maze[now.x + move[i].x][now.y + move[i].y] == 0)
       {
-        //¤U­Ó¦ì¸m
+        //ï¿½Uï¿½Ó¦ï¿½m
         point temp;
         temp.x = now.x + move[i].x;
         temp.y = now.y + move[i].y;
@@ -145,13 +145,13 @@ bool MazePath(int startX, int startY, int endX, int endY)
   return false;
 }
 
-// PrintPath(²×ÂIx, ²×ÂIy, °_ÂIx, °_ÂIy)
+// PrintPath(ï¿½ï¿½ï¿½Ix, ï¿½ï¿½ï¿½Iy, ï¿½_ï¿½Ix, ï¿½_ï¿½Iy)
 void PrintPath(int startX, int startY, int endX, int endY, bool mid)
 {
-  //?¥X³Ìµu¸ô?
-  //«O¦s¦ì¸m
+  //?ï¿½Xï¿½Ìµuï¿½ï¿½?
+  //ï¿½Oï¿½sï¿½ï¿½m
   point temp;
-  //«O¦s¸ô?§Ç¦C
+  //ï¿½Oï¿½sï¿½ï¿½?ï¿½Ç¦C
   stack<point> s;
   temp.x = startX;
   temp.y = startY;
@@ -222,14 +222,14 @@ void clearMap(int row, int column)
 int main()
 {
   unsigned seed;
-  // ¨ú±o®É¶¡§Ç¦C
+  // ï¿½ï¿½ï¿½oï¿½É¶ï¿½ï¿½Ç¦C
   seed = (unsigned)time(NULL);
-  // ¥H®É¶¡§Ç¦C·í¶Ã¼ÆºØ¤l
+  // ï¿½Hï¿½É¶ï¿½ï¿½Ç¦Cï¿½ï¿½Ã¼ÆºØ¤l
   srand(seed);
 
-  //°g?¦æ?
+  //ï¿½g?ï¿½ï¿½?
   int row = 15;
-  //°g?¦C?
+  //ï¿½g?ï¿½C?
   int column = 15;
 
   int startX = rand() % row + 1;
@@ -245,55 +245,55 @@ int main()
   clearMap(row, column);
   Create(row, column, startX, startY, endX, endY);
 
-  cout << KWHT << "½Ð°Ý­n¿é¤J¤¤¶¡ÂI¶Ü¡H(y/N) ";
+  cout << KWHT << "ï¿½Ð°Ý­nï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½Ü¡H(y/N) ";
   cin >> haveMid;
   if (haveMid == 'y')
   {
-    cout << KWHT << "½Ð¿é¤J¤¤¶¡ÂIªºX®y¼Ð(1-15): ";
+    cout << KWHT << "ï¿½Ð¿ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½Xï¿½yï¿½ï¿½(1-15): ";
     cin >> midX;
-    cout << KWHT << "½Ð¿é¤J¤¤¶¡ÂIªºY®y¼Ð(1-15): ";
+    cout << KWHT << "ï¿½Ð¿ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½Yï¿½yï¿½ï¿½(1-15): ";
     cin >> midY;
   }
 
   if (midX == -1 && midY == -1)
   {
-    // µL¤¤¶¡ÂI
+    // ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½I
     MazePath(startX, startY, endX, endY);
     cout << KWHT << "(" << startX << ", " << startY << ") => (" << endX << ", " << endY << ")" << endl;
     if (pass)
     {
-      cout << "¦³§ä¨ì¸ô®|" << endl;
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|" << endl;
       PrintPath(startX, startY, endX, endY, false);
     }
     else
     {
-      cout << "¨S¦³§ä¨ì¸ô®|" << endl;
+      cout << "ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|" << endl;
     }
   }
   else
   {
-    // ¦³¤¤¶¡ÂI
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½I
     MazePath(startX, startY, midX, midY);
     if (pass)
     {
-      cout << "¦³§ä¨ì¸ô®|" << endl;
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|" << endl;
       PrintPath(startX, startY, midX, midY, false);
     }
     else
     {
-      cout << "¨S¦³§ä¨ì¸ô®|" << endl;
+      cout << "ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|" << endl;
     }
 
     MazePath(midX, midY, endX, endY);
     cout << KWHT << "(" << startX << ", " << startY << ") => (" << midX << ", " << midY << ") => (" << endX << ", " << endY << ")" << endl;
     if (pass)
     {
-      cout << "¦³§ä¨ì¸ô®|" << endl;
+      cout << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|" << endl;
       PrintPath(midX, midY, endX, endY, true);
     }
     else
     {
-      cout << "¨S¦³§ä¨ì¸ô®|" << endl;
+      cout << "ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½|" << endl;
     }
   }
 
