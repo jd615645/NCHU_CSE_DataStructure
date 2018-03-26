@@ -14,9 +14,9 @@ int maze[10000][10000];
 int solMaze[10000][10000];
 int showMaze[10000][10000];
 vector<int> path;
-int levelCount[10] = {1, 2, 4, 8, 16, 32, 64, 128, 512, 1024};
-int heap[2000];
-int heapSize = 0;
+int levelCount[10] = {1, 3, 7, 15, 31, 63, 127, 511, 1023, 2047};
+int heap[3000];
+int heapSize = 1;
 
 struct point {
   //横座標纵座標
@@ -47,6 +47,7 @@ void init() {
   maze[n][m] = 1;
 }
 
+// 畫出迷宮
 void printMaze() {
   int count = 1;
   for (int i = 0; i <= n; i++) {
@@ -55,9 +56,6 @@ void printMaze() {
     for (int j = 0; j <= m; j++) {
       int now = maze[i + 1][j + 1];
       line1 += " @ ";
-      // cout << "maze[" << i+1 << "][" << j+1 << "]: " << maze[i+1][j+1] << endl;
-      // cout << "maze[" << i << "][" << j+1 << "]: " << maze[i][j+1] << endl;
-      // cout << "maze[" << i+1 << "][" << j << "]: " << maze[i+1][j] << endl;
 
       if (now == maze[i + 1][j] && now != -1 && now != 0) {
         line2 += "   ";
@@ -139,6 +137,7 @@ bool MazePath(int startX, int startY, int endX, int endY) {
   return false;
 }
 
+// 初始化迷宮陣列
 void setSolMaze() {
   for (int i = 0; i <= n; i++) {
     for (int j = 0; j <= m; j++) {
@@ -150,7 +149,7 @@ void setSolMaze() {
     }
   }
 }
-
+// 清除解迷宮ary殘質
 void clearMap(int row, int column) {
   Pre = new point *[row + 2];
   for (int i = 0; i < row + 2; i++) {
@@ -158,37 +157,7 @@ void clearMap(int row, int column) {
   }
 }
 
-void printMazeMap() {
-  for (int i = 1; i <= n; i++) {
-    for (int j = 1; j <= n; j++) {
-      if (maze[i][j] < 10) {
-        cout << "0";
-      }
-      cout << maze[i][j] << " ";
-    }
-    cout << endl;
-  }
-  cout << "-----" << endl;
-}
-
-void printSolMazeMap() {
-  for (int i = 1; i <= n; i++) {
-    for (int j = 1; j <= n; j++) {
-      if (solMaze[i][j] < 10) {
-        cout << "0";
-      }
-      cout << solMaze[i][j] << " ";
-    }
-    cout << endl;
-  }
-  cout << "-----" << endl;
-}
-
 void printPath(int startX, int startY, int endX, int endY) {
-  // cout << "startX: " << startX << endl;
-  // cout << "startY: " << startY << endl;
-  // cout << "endX: " << endX << endl;
-  // cout << "endY: " << endY << endl;
   //保存位置
   point temp;
   //保存路径序列
@@ -216,6 +185,8 @@ void printPath(int startX, int startY, int endX, int endY) {
     }
     if (s.size() == 1) {
       printStr += std::to_string(showMaze[n][m]);
+      path.resize(path.size() + 1);
+      path[count] = showMaze[n][m];
 
       cout << printStr << endl;
     }
@@ -223,17 +194,125 @@ void printPath(int startX, int startY, int endX, int endY) {
   }
 }
 
+// 偵測在那一層tree
+int checkLevel(int num) {
+  int level = 1;
+  if (num == 0) {
+    return level;
+  }
+  for (int i = 9; i >= 0; i--) {
+    if (num > levelCount[i]) {
+      level = i + 2;
+      break;
+    }
+  }
+  
+  return level;
+}
+
+// 偵測是否在min層
+bool isMinLevel(int num) {
+  // cout << "num " << num << ", level " << checkLevel(num) << endl;
+  if (checkLevel(num) % 2) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+// print heap tree
+void showHeap() {
+  cout << "(" << heap[1] << ")" << endl;
+  for (int i = 1; i < 10; i++) {
+    int count = 0;
+    bool stop = false;
+    for (int j = levelCount[i - 1] + 1; j <= levelCount[i]; j++) {
+      if (heap[j] != 0) {
+        if (!(count % 2)) {
+          // odd
+          cout << "(" << heap[j];
+        } else {
+          cout << "," << heap[j] << ")";
+        }
+        if (j == levelCount[i]) {
+          cout << endl;
+        }
+        count++;
+      } else {
+        if (count % 2) {
+          cout << ")" << endl;
+        }
+        stop = true;
+        break;
+      }
+    }
+    if (stop) {
+      break;
+    }
+  }
+  cout << endl;
+}
+
+// heap間兩個node交換數值
+void heapSwap(int x, int y) {
+  int temp = heap[x];
+  heap[x] = heap[y];
+  heap[y] = temp;
+}
+
+// 確認其父節點是否符合tree規定（in min level）
+void verifymin(int num) {
+  int space = num;
+  for (int i = num / 4; i >= 1; i /= 4) {
+    if (heap[space] < heap[i]) {
+      heapSwap(space, i);
+      space = i;
+    }
+  }
+}
+// 確認其父節點是否符合tree規定（in max level）
+void verifymax(int num) {
+  int space = num;
+  for (int i = num / 4; i >= 2; i /= 4) {
+    if (heap[space] > heap[i]) {
+      heapSwap(space, i);
+      space = i;
+    }
+  }
+}
+
+// insert數字進入heap
 void insertHeap(int num) {
-  heap[heapSize++] = num;
-  int leftChild = num * 2 + 1;
-  int rightChild = num * 2 + 2;
-
-}
-void delMax(int num) {
-
-}
-void delMin(int num) {
-
+  heap[heapSize] = num;
+  if (heapSize != 1) {
+    int parent = heapSize / 2;
+    // cout << "insertNum " << num << ", parentNum " << heap[parent] << endl;
+    // Check parent node 為 max 或 min 並做確定
+    if (isMinLevel(parent)) {
+      if (num < heap[parent]) {
+        heapSwap(heapSize, parent);
+        verifymin(parent);
+      }
+    }
+    else {
+      if (num > heap[parent]) {
+        heapSwap(heapSize, parent);
+        verifymax(parent);
+      }
+    }
+    // 檢測tree是否符合minmax tree
+    if (isMinLevel(heapSize)) {
+      verifymin(heapSize);
+    }
+    else {
+      verifymax(heapSize);
+    }
+  }
+  heapSize++;
+  
+  // 要看insert步驟請反註解這個
+  // showHeap();
 }
 
 int main() {
@@ -249,11 +328,13 @@ int main() {
 
   int count = 2;
   while (1) {
+    // 隨機產出兩組座標
     int x1 = rand() % n + 1;
     int y1 = rand() % m + 1;
     int x2 = rand() % n + 1;
     int y2 = rand() % m + 1;
 
+    // 確定兩組座標不相同
     if (!(x1 == x2 && y1 == y2)) {
       if (maze[x1][y1] == 0) {
         maze[x1][y1] = count++;
@@ -266,6 +347,7 @@ int main() {
       int min = std::min(x, y);
       int max = std::max(x, y);
 
+      // 合併兩個集合，以最小的集合代號為主
       for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= m; j++) {
           if (maze[i][j] == max) {
@@ -282,10 +364,30 @@ int main() {
     }
   }
 
-  // printSolMazeMap();
-  // printMazeMap();
   printMaze();
   printPath(1, 1, n, m);
-  
+
+  // 範例tree測資
+  // int ary[15] =
+  // {1, 2, 6, 11, 10, 13, 17, 21, 22, 23, 18, 19, 20, 24, 25};
+  // for (int i = 0; i < 15; i++) {
+  //   insertHeap(ary[i]);
+  // }
+
+  for (int i = 0; i < path.size(); i++) {
+    insertHeap(path[i]);
+  }
+  cout << endl;
+  showHeap();
+
+  while(1) {
+    int insertNum;
+    cout << endl;
+    cout << "請輸入要insert的數字: ";
+    cin >> insertNum;
+
+    insertHeap(insertNum);
+    showHeap();
+  }
   return 0;
 }
